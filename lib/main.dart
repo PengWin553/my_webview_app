@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:my_webview_app/web_view_container.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-void main() => runApp(
-  MaterialApp(
+void main() {
+  runApp(const MaterialApp(
+    home: MyApp(),
     debugShowCheckedModeBanner: false,
-    routes: {
-      '/': (context) => WebViewExample(),
-      '/webViewContainer': (context) => WebViewContainer()
-    },
-  ),
-);
-
-class WebViewExample extends StatefulWidget {
-  const WebViewExample({super.key});
-
-  @override
-  State<WebViewExample> createState() => _WebViewExampleState();
+  ));
 }
 
-class _WebViewExampleState extends State<WebViewExample> {
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _WebViewScreenState();
+}
+class _WebViewScreenState extends State<MyApp> {
+  late WebViewController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..loadRequest(
+        Uri.parse('https://dentalalpha.000webhostapp.com/'),
+      );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Webview Flutter Trial"),
+        centerTitle: true,
+        title: const Text("Webview Flutter Trial"),
       ),
-      body: content(),
-    );
-  }
-
-  Widget content() {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          //navigate to webview container screen
-          Navigator.of(context).pushNamed('/webViewContainer');
-        },
-        child: Text("Open WebView")),
+      body: WebViewWidget(
+        controller: controller,
+      ),
     );
   }
 }
