@@ -13,23 +13,26 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _WebViewScreenState();
 }
+
 class _WebViewScreenState extends State<MyApp> {
   late WebViewController controller;
   @override
   void initState() {
     super.initState();
     controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
         Uri.parse('https://dentalalpha.000webhostapp.com/'),
       );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Webview Flutter Trial"),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: const Text("Webview Flutter Trial"),
+      // ),
       body: WebViewWidget(
         controller: controller,
       ),
