@@ -22,10 +22,12 @@ class _SettingState extends State<Setting> {
     if (_formKey.currentState!.validate()) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('webviewUrl', _urlController.text);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('URL saved')),
-      );
-      Navigator.pop(context);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('URL saved')),
+        );
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -46,10 +48,24 @@ class _SettingState extends State<Setting> {
                   children: [
                     TextFormField(
                       controller: _urlController,
-                      decoration: const InputDecoration(labelText: 'Enter URL'),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.public),
+                        labelText: 'Enter URL',
+                        hintText: 'https://www.example.com/',
+                        border: OutlineInputBorder(),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a URL';
+                        }
+                        RegExp urlPattern = RegExp(
+                            r'^(https?:\/\/)' // protocol (http or https) must be present
+                            r'(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,})' // domain
+                            r'(:\d{1,5})?' // port (optional)
+                            r'(\/[^\s]*)?$' // path (optional)
+                            );
+                        if (!urlPattern.hasMatch(value)) {
+                          return 'Please enter a valid URL';
                         }
                         return null;
                       },
