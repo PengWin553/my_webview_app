@@ -33,12 +33,14 @@ class _WebViewScreenState extends State<MyApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedUrl = prefs.getString('webviewUrl');
     if (savedUrl == null || savedUrl.isEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Setting()),
-      ).then((_) {
-        _loadUrl();
-      });
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Setting()),
+        ).then((_) {
+          _loadUrl();
+        });
+      }
     } else {
       setState(() {
         url = savedUrl;
